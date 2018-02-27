@@ -6,6 +6,9 @@ class EventParser:
     def __init__(self, calendarURL):
         self.calendarURL = calendarURL
 
+        print("Event Parser has been initialized")
+
+    # TODO: Error handling
     def __fetchCalendar(self):
         req = requests.get(self.calendarURL)
         cal = Calendar.from_ical(req.text)
@@ -15,7 +18,12 @@ class EventParser:
     def parseContents(self):
         content = self.__fetchCalendar()
 
-        for event in content.walk("vevent"):
-            a = Assignment.fromFetchedData(event)
+        events = []
 
-            print(a)
+        for event in content.walk("vevent"):
+            a = Assignment.fromFetchedData(event, self.calendarURL)
+            events.append(a)
+
+        return events
+
+
